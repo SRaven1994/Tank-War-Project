@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="40" height="10" tilewidth="64" tileheight="64" infinite="0" nextlayerid="4" nextobjectid="3">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="40" height="10" tilewidth="64" tileheight="64" infinite="0" nextlayerid="4" nextobjectid="6">
+ <editorsettings>
+  <export target="Level1.json" format="json"/>
+ </editorsettings>
  <tileset firstgid="1" name="landscape-tileset" tilewidth="64" tileheight="64" tilecount="30" columns="6">
   <image source="tanks/landscape-tileset.png" width="384" height="320"/>
   <tile id="24">
    <properties>
-    <property name="collide" type="bool" value="false"/>
+    <property name="collide" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="25">
    <properties>
-    <property name="collide" type="bool" value="false"/>
+    <property name="collide" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="26">
    <properties>
-    <property name="collide" type="bool" value="false"/>
+    <property name="collide" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="27">
@@ -50,8 +53,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,25,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,25,0,0,0,0,0,0,25,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
  <objectgroup id="3" name="objectLayer">
@@ -59,6 +62,15 @@
    <point/>
   </object>
   <object id="2" type="enemySpawn" x="258" y="352">
+   <point/>
+  </object>
+  <object id="3" type="enemySpawn" x="1342.87" y="325.382">
+   <point/>
+  </object>
+  <object id="4" type="enemySpawn" x="2313.63" y="366.729">
+   <point/>
+  </object>
+  <object id="5" type="enemySpawn" x="805.365" y="75.503">
    <point/>
   </object>
  </objectgroup>
