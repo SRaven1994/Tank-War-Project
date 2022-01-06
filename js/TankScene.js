@@ -17,6 +17,7 @@ class TankScene extends Phaser.Scene {
         this.load.atlas("enemy", "assets/tanks/enemy-tanks.png", "assets/tanks/tanks.json")
         this.load.image("tileset", "assets/tanks/landscape-tileset.png")
         this.load.tilemapTiledJSON("Level1", "assets/Level1.json")
+        this.load.image("fuelbar", "assets/UI/fuel-bar.png")
     }
     create() {
         // Load In Tilemaps
@@ -27,6 +28,8 @@ class TankScene extends Phaser.Scene {
         this.destructLayer.setCollisionByProperty({ collide: true })
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
+        // Create UI
+
         // Create Bullets
         this.enemyBullets = this.physics.add.group({
             defaultKey: "bullet",
