@@ -11,13 +11,18 @@ class TankScene extends Phaser.Scene {
     playerBullets
     /** @type {Phaser.Physics.Arcade.Group} */
     enemyBullets
+    /** @type {Phaser.GameObjects.Text} */
+    enemytankremaining
     preload() {
         this.load.image("bullet", "assets/tanks/bullet.png")
         this.load.atlas("tank", "assets/tanks/tanks.png", "assets/tanks/tanks.json")
         this.load.atlas("enemy", "assets/tanks/enemy-tanks.png", "assets/tanks/tanks.json")
         this.load.image("tileset", "assets/tanks/landscape-tileset.png")
         this.load.tilemapTiledJSON("Level1", "assets/Level1.json")
-        this.load.image("fuelbar", "assets/UI/fuel-bar.png")
+        this.load.spritesheet("fuelbar", "assets/UI/fuel-bar.png", {frameWidth: 16, frameHeight: 16})
+        this.load.image("enemyicon", "assets/UI/enemy-tank-icon.png")
+        this.load.spritesheet("playerhealth", "assets/UI/player-tank-health.png", {frameWidth: 16, frameHeight: 16})
+        this.load.image("healthicon", "assets/UI/health.png")
     }
     create() {
         // Load In Tilemaps
@@ -29,7 +34,9 @@ class TankScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
         // Create UI
-
+        this.add.image(26, 24, "healthicon").setScrollFactor(0).setScale(3, 3)
+        this.add.image(30, 570, "enemyicon").setScrollFactor(0).setScale(1.5, 1.5)
+        
         // Create Bullets
         this.enemyBullets = this.physics.add.group({
             defaultKey: "bullet",

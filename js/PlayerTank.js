@@ -8,7 +8,7 @@ class PlayerTank extends BaseTank {
             s:Phaser.Input.Keyboard.KeyCodes.S,
             d:Phaser.Input.Keyboard.KeyCodes.D
         })
-        this.damageMax = 10
+        this.damageMax = 12
         this.currentSpeed = 0
     }
     update(){
