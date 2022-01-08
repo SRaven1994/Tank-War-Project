@@ -12,7 +12,17 @@ class TankScene extends Phaser.Scene {
     /** @type {Phaser.Physics.Arcade.Group} */
     enemyBullets
     /** @type {Phaser.GameObjects.Text} */
-    enemytankremaining
+    enemyTankRemaining
+    /** @type {number} */
+    enemyTankDestroyed = 0
+    /** @type {Phaser.GameObjects.Image} */
+    healthicon
+    /** @type {Phaser.GameObjects.Image} */
+    enemyicon
+    /** @type {Phaser.Animations.Animation} */
+    healthBar
+    /** @type {Phaser.Animations.Animation} */
+    fuelBar
     preload() {
         this.load.image("bullet", "assets/tanks/bullet.png")
         this.load.atlas("tank", "assets/tanks/tanks.png", "assets/tanks/tanks.json")
@@ -34,9 +44,14 @@ class TankScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
         // Create UI
-        this.add.image(26, 24, "healthicon").setScrollFactor(0).setScale(3, 3)
-        this.add.image(30, 570, "enemyicon").setScrollFactor(0).setScale(1.5, 1.5)
-        
+        this.add.image(26, 24, "healthicon").setScrollFactor(0).setScale(3, 3).setDepth(10)
+        this.add.image(30, 570, "enemyicon").setScrollFactor(0).setScale(1.5, 1.5).setDepth(10)
+        this.enemyTankRemaining =this.add.text(65, 565, "enemy tanks: 0", {
+            fontSize: "20px",
+            color: "#000000",
+            fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
+            fontStyle: "bold"
+        }).setScrollFactor(0).setDepth(10)
         // Create Bullets
         this.enemyBullets = this.physics.add.group({
             defaultKey: "bullet",
@@ -61,7 +76,7 @@ class TankScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player.hull, true, 0.25, 0.25)
         for(let i = 0; i < enemyObjects.length; i++){
             this.createEnemy(enemyObjects[i])
-        }
+        }   
     }
     update(time, delta) {
         this.player.update()
@@ -78,6 +93,9 @@ class TankScene extends Phaser.Scene {
         if(this.enemyTanks.length > 1){
             for(let i = 0; i < this.enemyTanks.length - 1; i++){
                 this.physics.add.collider(enemyTank.hull, this.enemyTanks[i].hull)
+                this.enemyTankDestroyed += 1
+                this.enemyTankRemaining.setText("enemy tanks: " + this.enemyTankDestroyed)
+
             }
         }
     }
