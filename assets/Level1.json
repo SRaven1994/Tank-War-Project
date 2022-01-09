@@ -46,8 +46,8 @@
                  "type":"playerSpawn",
                  "visible":true,
                  "width":0,
-                 "x":808,
-                 "y":358
+                 "x":192,
+                 "y":144
                 }, 
                 {
                  "height":0,
@@ -58,8 +58,8 @@
                  "type":"enemySpawn",
                  "visible":true,
                  "width":0,
-                 "x":1342.87,
-                 "y":325.382
+                 "x":1552,
+                 "y":192
                 }, 
                 {
                  "height":0,
@@ -82,8 +82,8 @@
                  "type":"enemySpawn",
                  "visible":true,
                  "width":0,
-                 "x":805.365,
-                 "y":75.503
+                 "x":800,
+                 "y":144
                 }],
          "opacity":1,
          "type":"objectgroup",

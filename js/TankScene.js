@@ -29,9 +29,9 @@ class TankScene extends Phaser.Scene {
         this.load.atlas("enemy", "assets/tanks/enemy-tanks.png", "assets/tanks/tanks.json")
         this.load.image("tileset", "assets/tanks/landscape-tileset.png")
         this.load.tilemapTiledJSON("Level1", "assets/Level1.json")
-        this.load.spritesheet("fuelbar", "assets/UI/fuel-bar.png", {frameWidth: 16, frameHeight: 16})
+        this.load.spritesheet("fuelbar", "assets/UI/fuel-bar.png", {frameWidth: 128, frameHeight: 10})
         this.load.image("enemyicon", "assets/UI/enemy-tank-icon.png")
-        this.load.spritesheet("playerhealth", "assets/UI/player-tank-health.png", {frameWidth: 16, frameHeight: 16})
+        this.load.spritesheet("playerhealth", "assets/UI/player-tank-health.png", {frameWidth: 32, frameHeight: 32})
         this.load.image("healthicon", "assets/UI/health.png")
     }
     create() {
@@ -52,6 +52,21 @@ class TankScene extends Phaser.Scene {
             fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
             fontStyle: "bold"
         }).setScrollFactor(0).setDepth(10)
+        this.add.image(80, 24, "playerhealth", 0).setScrollFactor(0).setScale(1.5, 1.5).setDepth(10)
+        this.add.image(625, 575, "fuelbar", 0).setScrollFactor(0).setScale(2.5, 2.5).setDepth(10)
+        // UI Animations
+        this.anims.create({
+            key: "playerHealthBar",
+            frames: this.anims.generateFrameNumbers("playerhealth", { start:0, end: 12}),
+            frameRate: 0,
+            repeat: -1
+        })
+        this.anims.create({
+            key: "playerFuelBar",
+            frames: this.anims.generateFrameNumbers("fuelbar", {start:0, end: 36}),
+            frameRate: 0,
+            repeat: -1
+        })
         // Create Bullets
         this.enemyBullets = this.physics.add.group({
             defaultKey: "bullet",
@@ -83,6 +98,12 @@ class TankScene extends Phaser.Scene {
         for(let i = 0; i < this.enemyTanks.length; i++){
             this.enemyTanks[i].update(time, delta)
         }
+    if (this.player.damageMax == 12){
+
+    }
+    else if(this.player.damageMax == 11){
+
+    }    
     }
     createEnemy(dataObject){
         let enemyTank = new EnemyTank(this, dataObject.x, dataObject.y, "enemy", "tank1", this.player)
@@ -103,4 +124,5 @@ class TankScene extends Phaser.Scene {
         this.player = new PlayerTank(this, dataObject.x, dataObject.y, "tank", "tank1")
         this.player.enableCollision(this.destructLayer)
     }
+
 }
