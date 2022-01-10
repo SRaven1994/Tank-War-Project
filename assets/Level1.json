@@ -1,4 +1,12 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"Level1.json"
+        }
+    },
  "height":10,
  "infinite":false,
  "layers":[
@@ -92,10 +100,10 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":13,
+ "nextobjectid":16,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.7.2",
+ "tiledversion":"1.4.3",
  "tileheight":64,
  "tilesets":[
         {
@@ -123,7 +131,7 @@
                  "id":25,
                  "properties":[
                         {
-                         "name":"collide",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -132,7 +140,7 @@
                  "id":26,
                  "properties":[
                         {
-                         "name":"collide",
+                         "name":"collides",
                          "type":"bool",
                          "value":true
                         }]
@@ -141,7 +149,7 @@
                  "id":27,
                  "properties":[
                         {
-                         "name":"collide",
+                         "name":"collides",
                          "type":"bool",
                          "value":false
                         }]
@@ -150,6 +158,6 @@
         }],
  "tilewidth":64,
  "type":"map",
- "version":"1.6",
+ "version":1.4,
  "width":40
 }
