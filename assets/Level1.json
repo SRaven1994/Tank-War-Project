@@ -66,8 +66,8 @@
                  "type":"enemySpawn",
                  "visible":true,
                  "width":0,
-                 "x":1552,
-                 "y":192
+                 "x":1948,
+                 "y":118
                 }, 
                 {
                  "height":0,
@@ -78,8 +78,8 @@
                  "type":"enemySpawn",
                  "visible":true,
                  "width":0,
-                 "x":2313.63,
-                 "y":366.729
+                 "x":1953.63,
+                 "y":554.729
                 }, 
                 {
                  "height":0,
@@ -92,6 +92,42 @@
                  "width":0,
                  "x":800,
                  "y":144
+                }, 
+                {
+                 "height":0,
+                 "id":16,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"enemySpawn",
+                 "visible":true,
+                 "width":0,
+                 "x":1282,
+                 "y":512
+                }, 
+                {
+                 "height":0,
+                 "id":17,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bossSpawn",
+                 "visible":true,
+                 "width":0,
+                 "x":2428,
+                 "y":362
+                }, 
+                {
+                 "height":0,
+                 "id":19,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"speedSpawn",
+                 "visible":true,
+                 "width":0,
+                 "x":282,
+                 "y":348
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -100,7 +136,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":16,
+ "nextobjectid":20,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.4.3",

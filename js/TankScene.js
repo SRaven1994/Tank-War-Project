@@ -19,9 +19,9 @@ class TankScene extends Phaser.Scene {
     healthIcon
     /** @type {Phaser.GameObjects.Image} */
     enemyIcon
-    /** @type {Phaser.Animations.Animation} */
+    /** @type {Phaser.GameObjects.Sprite} */
     healthBar
-    /** @type {Phaser.Animations.Animation} */
+    /** @type {Phaser.GameObjects.Sprite} */
     fuelBar
     /** @type {Phaser.GameObjects.Group} */
     explosions
@@ -29,6 +29,8 @@ class TankScene extends Phaser.Scene {
         this.load.image("bullet", "assets/tanks/bullet.png")
         this.load.atlas("tank", "assets/tanks/tanks.png", "assets/tanks/tanks.json")
         this.load.atlas("enemy", "assets/tanks/enemy-tanks.png", "assets/tanks/tanks.json")
+        this.load.atlas("boss", "assets/tanks/boss-tanks.png", "assets/tanks/tanks.json")
+        this.load.atlas("speed", "assets/tanks/speed-tanks.png", "assets/tanks/tanks.json")
         this.load.image("tileset", "assets/tanks/landscape-tileset.png")
         this.load.tilemapTiledJSON("Level1", "assets/Level1.json")
         this.load.spritesheet("fuelbar", "assets/UI/fuel-bar.png", { frameWidth: 128, frameHeight: 10 })
@@ -47,29 +49,35 @@ class TankScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
         // Create UI
-        this.add.image(26, 24, "healthicon").setScrollFactor(0).setScale(3, 3).setDepth(10)
+        let healthBar = this.add.image(26, 24, "healthicon").setScrollFactor(0).setScale(3, 3).setDepth(10)
         this.add.image(30, 570, "enemyicon").setScrollFactor(0).setScale(1.5, 1.5).setDepth(10)
         this.enemyTankRemaining = this.add.text(65, 565, "enemy tanks: 0", {
             fontSize: "20px",
-            color: "#000000",
+            color: "#FFFFFF",
             fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
             fontStyle: "bold"
         }).setScrollFactor(0).setDepth(10)
-        this.add.image(80, 24, "playerhealth", 0).setScrollFactor(0).setScale(1.5, 1.5).setDepth(10)
-        this.add.image(625, 575, "fuelbar", 0).setScrollFactor(0).setScale(2.5, 2.5).setDepth(10)
+        this.add.sprite(80, 24, "playerhealth", 0).setScrollFactor(0).setScale(1.5, 1.5).setDepth(10)
+        this.add.sprite(625, 575, "fuelbar", 0).setScrollFactor(0).setScale(2.5, 2.5).setDepth(10)
         // UI Animations
         this.anims.create({
             key: "playerHealthBar",
-            frames: this.anims.generateFrameNumbers("playerhealth", { start: 0, end: 12 }),
-            frameRate: 0,
-            repeat: -1
+            frames: this.anims.generateFrameNumbers("playerhealth", {frames:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}),
+            frameRate: 1,
         })
         this.anims.create({
             key: "playerFuelBar",
             frames: this.anims.generateFrameNumbers("fuelbar", { start: 0, end: 36 }),
-            frameRate: 0,
-            repeat: -1
+            frameRate: 1,
         })
+        // To test out later for UI Animation changes on Frame, may work?
+        // this.anims.create({
+        //     key: 'anim_run',
+        //     frames: [
+        //         { key: 'sprites', frame: 'guyrun1' },
+        //         { key: 'sprites', frame: 'guyrun2' },
+        //         { key: 'sprites', frame: 'guyrun3' },
+        //         { key: 'sprites', frame: 'guyrun2' }
         // Create Bullets
         this.enemyBullets = this.physics.add.group({
             defaultKey: "bullet",
@@ -87,7 +95,7 @@ class TankScene extends Phaser.Scene {
             actor = Utils.RetrieveCustomProperties(object)
             if (actor.type == "playerSpawn") {
                 this.createPlayer(actor)
-            } else if (actor.type == "enemySpawn") {
+            } else if (actor.type == "enemySpawn" || actor.type == "speedSpawn" || actor.type == "bossSpawn") {
                 enemyObjects.push(actor)
             }
         }, this)
@@ -116,24 +124,31 @@ class TankScene extends Phaser.Scene {
         for (let i = 0; i < this.enemyTanks.length; i++) {
             this.enemyTanks[i].update(time, delta)
         }
-        if (this.player.damageMax == 12) {
-
+        if (this.player.damageCount == 0) {
+            // this.healthBar.setMask
         }
-        else if (this.player.damageMax == 11) {
+        else if (this.player.damageCount == 1) {
 
         }
     }
     createEnemy(dataObject) {
-        let enemyTank = new EnemyTank(this, dataObject.x, dataObject.y, "enemy", "tank1", this.player)
+        let enemyTank 
+        if(dataObject.type == "enemySpawn"){
+            enemyTank = new EnemyTank(this, dataObject.x, dataObject.y, "enemy", "tank1", this.player)
+        }else if(dataObject.type == "bossSpawn"){
+            enemyTank = new BossTank(this, dataObject.x, dataObject.y, "boss", "tank1", this.player)
+        }else if(dataObject.type == "speedSpawn"){
+            enemyTank = new SpeedyTank(this, dataObject.x, dataObject.y, "speed", "tank1", this.player)
+        }
         enemyTank.initMovement()
         enemyTank.enableCollision(this.destructLayer)
         enemyTank.setBullets(this.enemyBullets)
+        this.enemyTankDestroyed ++
         this.physics.add.collider(enemyTank.hull, this.player.hull)
         this.enemyTanks.push(enemyTank)
         if (this.enemyTanks.length > 1) {
             for (let i = 0; i < this.enemyTanks.length - 1; i++) {
-                this.physics.add.collider(enemyTank.hull, this.enemyTanks[i].hull)
-                this.enemyTankDestroyed ++
+                this.physics.add.collider(enemyTank.hull, this.enemyTanks[i].hull)                
                 this.enemyTankRemaining.setText("enemy tanks: " + this.enemyTankDestroyed)
             }
         }
@@ -164,8 +179,24 @@ class TankScene extends Phaser.Scene {
                 this.physics.add.overlap(this.enemyTanks[i].hull, bullet, this.bulletHitEnemy, null, this)
         }
     }
-    bulletHitPlayer(){
-        
+    bulletHitPlayer(hull, bullet){
+        this.disposeOfBullet(bullet)
+        let explosion = this.explosions.get(hull.x, hull.y)
+        if(explosion){
+            this.activateExplosion(explosion)
+            explosion.play("explode")
+        }
+        this.player.damage()
+        if(this.player.isDestroyed()){
+            this.input.enabled = false
+            this.enemyTanks = []
+            this.physics.pause()
+            let explosion = this.explosions.get(hull.x, hull.y)
+            if(explosion){
+                this.activateExplosion(explosion)
+                explosion.play("explode")
+            }
+        }
     }
 
     bulletHitEnemy(hull, bullet) {
@@ -181,6 +212,12 @@ class TankScene extends Phaser.Scene {
             }
         }
         this.disposeOfBullet(bullet)
+        let explosion = this.explosions.get(hull.x, hull.y)
+        if(explosion){
+            this.activateExplosion(explosion)
+            explosion.on("animationcomplete", this.animComplete, this)
+            explosion.play("explode")
+        }
         enemy.damage()
         if(enemy.isImmobilised()){
             let explosion = this.explosions.get(hull.x, hull.y)
@@ -192,6 +229,8 @@ class TankScene extends Phaser.Scene {
             if(enemy.isDestroyed()){
                 // Remove from Array
                 this.enemyTanks.splice(index, 1)
+                this.enemyTankDestroyed --
+                this.enemyTankRemaining.setText("enemy tanks: " + this.enemyTankDestroyed)
             }
         }
     }
@@ -202,6 +241,12 @@ class TankScene extends Phaser.Scene {
     }
     damageWall(bullet, tile) {
         this.disposeOfBullet(bullet)
+        let explosion = this.explosions.get(bullet.x, bullet.y)
+        if(explosion){
+            this.activateExplosion(explosion)
+            explosion.on("animationcomplete", this.animComplete, this)
+            explosion.play("explode")
+        }
         // Obtain tileset id
         let firstGid = this.destructLayer.tileset[0].firstgid
         // Next tile id
@@ -211,6 +256,12 @@ class TankScene extends Phaser.Scene {
         let newTile = this.destructLayer.putTileAt(nextTileId + firstGid, tile.x, tile.y)
         if (tileProperties && tileProperties.collides) {
             newTile.setCollision(true)
+            let explosion = this.explosions.get(bullet.x, bullet.y)
+            if(explosion){
+                this.activateExplosion(explosion)
+                explosion.on("animationcomplete", this.animComplete, this)
+                explosion.play("explode")
+            }
         }
     }
     disposeOfBullet(bullet) {
