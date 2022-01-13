@@ -11,9 +11,18 @@ class PlayerTank extends BaseTank {
         this.damageMax = 12
         this.currentSpeed = 0
         this.currentFuel = 36
+        this.usedFuel = true
     }
     update(){
-        super.update()
+        if(this.currentFuel > 36){
+            this.currentFuel = 36
+        }
+        if(this.usedFuel && this.currentFuel >= 1){
+            this.currentFuel --
+            this.usedFuel = false
+            setTimeout(() => { this.usedFuel = true}, 1000) 
+         }  
+        super.update()    
         if(this.keys.w.isDown && this.currentFuel >= 1){
             if(this.currentSpeed < this.tankSpeed){
                 this.currentSpeed += 2000

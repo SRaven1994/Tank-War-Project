@@ -1,12 +1,4 @@
 { "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"json",
-         "target":"Level1.json"
-        }
-    },
  "height":10,
  "infinite":false,
  "layers":[
@@ -126,8 +118,80 @@
                  "type":"speedSpawn",
                  "visible":true,
                  "width":0,
-                 "x":282,
-                 "y":348
+                 "x":1728,
+                 "y":320
+                }, 
+                {
+                 "height":0,
+                 "id":20,
+                 "name":"health",
+                 "point":true,
+                 "rotation":0,
+                 "type":"healthItem",
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":544
+                }, 
+                {
+                 "height":0,
+                 "id":22,
+                 "name":"health",
+                 "point":true,
+                 "rotation":0,
+                 "type":"healthItem",
+                 "visible":true,
+                 "width":0,
+                 "x":1120,
+                 "y":352
+                }, 
+                {
+                 "height":0,
+                 "id":23,
+                 "name":"health",
+                 "point":true,
+                 "rotation":0,
+                 "type":"healthItem",
+                 "visible":true,
+                 "width":0,
+                 "x":1856,
+                 "y":320
+                }, 
+                {
+                 "height":0,
+                 "id":24,
+                 "name":"fuel",
+                 "point":true,
+                 "rotation":0,
+                 "type":"fuelItem",
+                 "visible":true,
+                 "width":0,
+                 "x":864,
+                 "y":512
+                }, 
+                {
+                 "height":0,
+                 "id":26,
+                 "name":"fuel",
+                 "point":true,
+                 "rotation":0,
+                 "type":"fuelItem",
+                 "visible":true,
+                 "width":0,
+                 "x":1536,
+                 "y":160
+                }, 
+                {
+                 "height":0,
+                 "id":27,
+                 "name":"fuel",
+                 "point":true,
+                 "rotation":0,
+                 "type":"fuelItem",
+                 "visible":true,
+                 "width":0,
+                 "x":2112,
+                 "y":320
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -136,10 +200,10 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":20,
+ "nextobjectid":28,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.4.3",
+ "tiledversion":"1.7.2",
  "tileheight":64,
  "tilesets":[
         {
@@ -194,6 +258,6 @@
         }],
  "tilewidth":64,
  "type":"map",
- "version":1.4,
+ "version":"1.6",
  "width":40
 }

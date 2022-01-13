@@ -11,10 +11,14 @@ class TankScene extends Phaser.Scene {
     playerBullets
     /** @type {Phaser.Physics.Arcade.Group} */
     enemyBullets
+    /**@type {Phaser.Physics.Arcade.StaticGroup} */
+    healthItem
+    /**@type {Phaser.Physics.Arcade.StaticGroup} */
+    fuelItem
     /** @type {Phaser.GameObjects.Text} */
     enemyTankRemaining
     /** @type {number} */
-    enemyTankDestroyed = 0
+    enemyTankRemain = 0
     /** @type {Phaser.GameObjects.Image} */
     healthIcon
     /** @type {Phaser.GameObjects.Image} */
@@ -38,6 +42,9 @@ class TankScene extends Phaser.Scene {
         this.load.spritesheet("playerhealth", "assets/UI/player-tank-health.png", { frameWidth: 32, frameHeight: 32 })
         this.load.image("healthicon", "assets/UI/health.png")
         this.load.spritesheet("explosion", "assets/tanks/explosion.png", { frameWidth: 64, frameHeight: 64 })
+        this.load.image("healthItem", "assets/items/repairItem.png")
+        this.load.image("ammoItem", "assets/items/ammoItem.png")
+        this.load.image("fuelItem", "assets/items/fuelItem.png")
     }
     create() {
         // Load In Tilemaps
@@ -49,7 +56,7 @@ class TankScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
         // Create UI
-        let healthBar = this.add.image(26, 24, "healthicon").setScrollFactor(0).setScale(3, 3).setDepth(10)
+        this.add.image(26, 24, "healthicon").setScrollFactor(0).setScale(3, 3).setDepth(10)
         this.add.image(30, 570, "enemyicon").setScrollFactor(0).setScale(1.5, 1.5).setDepth(10)
         this.enemyTankRemaining = this.add.text(65, 565, "enemy tanks: 0", {
             fontSize: "20px",
@@ -99,6 +106,20 @@ class TankScene extends Phaser.Scene {
                 enemyObjects.push(actor)
             }
         }, this)
+        let healthPoints = TankScene.FindPoints(this.map, "objectLayer", "healthItem")
+        this.healthItem = this.physics.add.staticGroup()
+        for (let point, i = 0; i < healthPoints.length; i++){
+            point = healthPoints[i]
+            this.healthItem.create(point.x, point.y, "healthItem")
+        }
+        this.physics.add.overlap(this.player.hull, this.healthItem, this.collectHealth, null, this)
+        let fuelPoints = TankScene.FindPoints(this.map, "objectLayer", "fuelItem")
+        this.fuelItem = this.physics.add.staticGroup()
+        for (let point, i = 0; i < fuelPoints.length; i++){
+            point = fuelPoints[i]
+            this.fuelItem.create(point.x, point.y, "fuelItem")
+        }
+        this.physics.add.overlap(this.player.hull, this.fuelItem, this.collectFuel, null, this)
         this.cameras.main.startFollow(this.player.hull, true, 0.25, 0.25)
         for (let i = 0; i < enemyObjects.length; i++) {
             this.createEnemy(enemyObjects[i])
@@ -143,13 +164,13 @@ class TankScene extends Phaser.Scene {
         enemyTank.initMovement()
         enemyTank.enableCollision(this.destructLayer)
         enemyTank.setBullets(this.enemyBullets)
-        this.enemyTankDestroyed ++
+        this.enemyTankRemain ++
         this.physics.add.collider(enemyTank.hull, this.player.hull)
         this.enemyTanks.push(enemyTank)
         if (this.enemyTanks.length > 1) {
             for (let i = 0; i < this.enemyTanks.length - 1; i++) {
                 this.physics.add.collider(enemyTank.hull, this.enemyTanks[i].hull)                
-                this.enemyTankRemaining.setText("enemy tanks: " + this.enemyTankDestroyed)
+                this.enemyTankRemaining.setText("enemy tanks: " + this.enemyTankRemain)
             }
         }
     }
@@ -229,8 +250,8 @@ class TankScene extends Phaser.Scene {
             if(enemy.isDestroyed()){
                 // Remove from Array
                 this.enemyTanks.splice(index, 1)
-                this.enemyTankDestroyed --
-                this.enemyTankRemaining.setText("enemy tanks: " + this.enemyTankDestroyed)
+                this.enemyTankRemain --
+                this.enemyTankRemaining.setText("enemy tanks: " + this.enemyTankRemain)
             }
         }
     }
@@ -264,11 +285,40 @@ class TankScene extends Phaser.Scene {
             }
         }
     }
+    collectHealth(player, healthItem){
+        if(this.player.damageCount > 0){
+            healthItem.disableBody(true, true)
+            this.player.damageCount --
+        }
+    }
+    collectFuel(player, fuelItem){
+        if(this.player.currentFuel < 36){
+            fuelItem.disableBody(true, true)
+            this.player.currentFuel += 9
+        }
+    }
     disposeOfBullet(bullet) {
         bullet.disableBody(true, true)
     }
     animComplete(animation, frame, gameObject){
         this.explosions.killAndHide(gameObject)
     }
+        // Spawn Objects on Point
+        static FindPoint(map, layer, type, name) {
+            var loc = map.findObject(layer, function (object) {
+                if (object.type === type && object.name === name) {
+                    return object
+                }
+            })
+            return loc
+        }
+        static FindPoints(map, layer, type) {
+            var locs = map.filterObjects(layer, function (object) {
+                if (object.type === type) {
+                    return object
+                }
+            })
+            return locs
+        }
 
 }
