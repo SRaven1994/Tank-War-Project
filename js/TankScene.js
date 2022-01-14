@@ -15,7 +15,7 @@ class TankScene extends Phaser.Scene {
     healthItem
     /**@type {Phaser.Physics.Arcade.StaticGroup} */
     fuelItem
-    /** @type {Phaser.GameObjects.Text} */
+    /** @type {Phaser.GameObjects.BitmapText} */
     enemyTankRemaining
     /** @type {number} */
     enemyTankRemain = 0
@@ -37,7 +37,7 @@ class TankScene extends Phaser.Scene {
         this.load.atlas("speed", "assets/tanks/speed-tanks.png", "assets/tanks/tanks.json")
         this.load.image("tileset", "assets/tanks/landscape-tileset.png")
         this.load.tilemapTiledJSON("Level1", "assets/Level1.json")
-        this.load.spritesheet("fuelbar", "assets/UI/fuel-bar.png", { frameWidth: 128, frameHeight: 10 })
+        this.load.spritesheet("fuelbar", "assets/UI/fuel-bar.png", { frameWidth: 32, frameHeight: 32 })
         this.load.image("enemyicon", "assets/UI/enemy-tank-icon.png")
         this.load.spritesheet("playerhealth", "assets/UI/player-tank-health.png", { frameWidth: 32, frameHeight: 32 })
         this.load.image("healthicon", "assets/UI/health.png")
@@ -45,6 +45,7 @@ class TankScene extends Phaser.Scene {
         this.load.image("healthItem", "assets/items/repairItem.png")
         this.load.image("ammoItem", "assets/items/ammoItem.png")
         this.load.image("fuelItem", "assets/items/fuelItem.png")
+        this.load.bitmapFont("tankFont", "assets/fonts/carrier_command.png", "assets/fonts/carrier_command.xml")
     }
     create() {
         // Load In Tilemaps
@@ -54,37 +55,159 @@ class TankScene extends Phaser.Scene {
         this.destructLayer = this.map.createLayer("destructableLayer", [landscape], 0, 0)
         this.destructLayer.setCollisionByProperty({ collide: true })
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
-        this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
+        this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)   
         // Create UI
         this.add.image(26, 24, "healthicon").setScrollFactor(0).setScale(3, 3).setDepth(10)
         this.add.image(30, 570, "enemyicon").setScrollFactor(0).setScale(1.5, 1.5).setDepth(10)
-        this.enemyTankRemaining = this.add.text(65, 565, "enemy tanks: 0", {
-            fontSize: "20px",
-            color: "#FFFFFF",
-            fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
-            fontStyle: "bold"
-        }).setScrollFactor(0).setDepth(10)
-        this.add.sprite(80, 24, "playerhealth", 0).setScrollFactor(0).setScale(1.5, 1.5).setDepth(10)
-        this.add.sprite(625, 575, "fuelbar", 0).setScrollFactor(0).setScale(2.5, 2.5).setDepth(10)
+        this.enemyTankRemaining = this.add.bitmapText(65, 565, "tankFont", "enemy tanks: 0", 12).setScrollFactor(0).setDepth(10)
+        this.healthBar = this.add.sprite(80, 24, "playerhealth", 0).setScrollFactor(0).setScale(1.5, 1.5).setDepth(10)
+        this.fuelBar = this.add.sprite(750, 550, "fuelbar", 0).setScrollFactor(0).setScale(3, 3).setDepth(10)
         // UI Animations
-        this.anims.create({
-            key: "playerHealthBar",
-            frames: this.anims.generateFrameNumbers("playerhealth", {frames:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}),
+        const playerHealthBar0 = {
+            key: "playerHealthBar0",
+            frames: this.anims.generateFrameNumbers("playerhealth",{frames: [0]}),
             frameRate: 1,
-        })
-        this.anims.create({
-            key: "playerFuelBar",
-            frames: this.anims.generateFrameNumbers("fuelbar", { start: 0, end: 36 }),
+            repeat: -1
+        }
+        this.anims.create(playerHealthBar0)
+        const playerHealthBar1 = {
+            key: "playerHealthBar1",
+            frames: [{ key: "playerhealth", frame: 1}],
             frameRate: 1,
-        })
-        // To test out later for UI Animation changes on Frame, may work?
-        // this.anims.create({
-        //     key: 'anim_run',
-        //     frames: [
-        //         { key: 'sprites', frame: 'guyrun1' },
-        //         { key: 'sprites', frame: 'guyrun2' },
-        //         { key: 'sprites', frame: 'guyrun3' },
-        //         { key: 'sprites', frame: 'guyrun2' }
+        }
+        this.anims.create(playerHealthBar1)
+        const playerHealthBar2 = {
+            key: "playerHealthBar2",
+            frames: [{ key: "playerhealth", frame: 2}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar2)
+        const playerHealthBar3 = {
+            key: "playerHealthBar3",
+            frames: [{ key: "playerhealth", frame: 3}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar3)
+        const playerHealthBar4 = {
+            key: "playerHealthBar4",
+            frames: [{ key: "playerhealth", frame: 4}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar4)
+        const playerHealthBar5 = {
+            key: "playerHealthBar5",
+            frames: [{ key: "playerhealth", frame: 5}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar5)
+        const playerHealthBar6 = {
+            key: "playerHealthBar6",
+            frames: [{ key: "playerhealth", frame: 6}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar6)
+        const playerHealthBar7 = {
+            key: "playerHealthBar7",
+            frames: [{ key: "playerhealth", frame: 7}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar7)
+        const playerHealthBar8 = {
+            key: "playerHealthBar8",
+            frames: [{ key: "playerhealth", frame: 8}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar8)
+        const playerHealthBar9 = {
+            key: "playerHealthBar9",
+            frames: [{ key: "playerhealth", frame: 9}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar9)
+        const playerHealthBar10 = {
+            key: "playerHealthBar10",
+            frames: [{ key: "playerhealth", frame: 10}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar10)
+        const playerHealthBar11 = {
+            key: "playerHealthBar11",
+            frames: [{ key: "playerhealth", frame: 11}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar11)
+        const playerHealthBar12 = {
+            key: "playerHealthBar12",
+            frames: [{ key: "playerhealth", frame: 12}],
+            frameRate: 1,
+        }
+        this.anims.create(playerHealthBar12)
+        const playerFuelBar0 = {
+            key: "playerFuelBar0",
+            frames: [{ key: "fuelbar", frame: 0}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar0)
+        const playerFuelBar1 = {
+            key: "playerFuelBar1",
+            frames: [{ key: "fuelbar", frame: 1}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar1)
+        const playerFuelBar2 = {
+            key: "playerFuelBar2",
+            frames: [{ key: "fuelbar", frame: 2}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar2)
+        const playerFuelBar3 = {
+            key: "playerFuelBar3",
+            frames: [{ key: "fuelbar", frame: 3}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar3)
+        const playerFuelBar4 = {
+            key: "playerFuelBar4",
+            frames: [{ key: "fuelbar", frame: 4}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar4)
+        const playerFuelBar5 = {
+            key: "playerFuelBar5",
+            frames: [{ key: "fuelbar", frame: 5}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar5)
+        const playerFuelBar6 = {
+            key: "playerFuelBar6",
+            frames: [{ key: "fuelbar", frame: 6}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar6)
+        const playerFuelBar7 = {
+            key: "playerFuelBar7",
+            frames: [{ key: "fuelbar", frame: 7}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar7)
+        const playerFuelBar8 = {
+            key: "playerFuelBar8",
+            frames: [{ key: "fuelbar", frame: 8}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar8)
+        const playerFuelBar9 = {
+            key: "playerFuelBar9",
+            frames: [{ key: "fuelbar", frame: 9}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar9)
+        const playerFuelBar10 = {
+            key: "playerFuelBar10",
+            frames: [{ key: "fuelbar", frame: 10}],
+            frameRate: 1,
+        }
+        this.anims.create(playerFuelBar10)
         // Create Bullets
         this.enemyBullets = this.physics.add.group({
             defaultKey: "bullet",
@@ -146,10 +269,76 @@ class TankScene extends Phaser.Scene {
             this.enemyTanks[i].update(time, delta)
         }
         if (this.player.damageCount == 0) {
-            // this.healthBar.setMask
+            this.healthBar.play("playerHealthBar0", true)
         }
         else if (this.player.damageCount == 1) {
-
+            this.healthBar.play("playerHealthBar1", true)
+        }
+        else if (this.player.damageCount == 2) {
+            this.healthBar.play("playerHealthBar2", true)
+        }
+        else if (this.player.damageCount == 3) {
+            this.healthBar.play("playerHealthBar3", true)
+        }
+        else if (this.player.damageCount == 4) {
+            this.healthBar.play("playerHealthBar4", true)
+        }
+        else if (this.player.damageCount == 5) {
+            this.healthBar.play("playerHealthBar5", true)
+        }
+        else if (this.player.damageCount == 6) {
+            this.healthBar.play("playerHealthBar6", true)
+        }
+        else if (this.player.damageCount == 7) {
+            this.healthBar.play("playerHealthBar7", true)
+        }
+        else if (this.player.damageCount == 8) {
+            this.healthBar.play("playerHealthBar8", true)
+        }
+        else if (this.player.damageCount == 9) {
+            this.healthBar.play("playerHealthBar9", true)
+        }
+        else if (this.player.damageCount == 10) {
+            this.healthBar.play("playerHealthBar10", true)
+        }
+        else if (this.player.damageCount == 11) {
+            this.healthBar.play("playerHealthBar11", true)
+        }
+        else if (this.player.damageCount == 12) {
+            this.healthBar.play("playerHealthBar12", true)
+        }
+        if (this.player.currentFuel > 90){
+            this.fuelBar.play("playerFuelBar0", true)
+        }
+        else if(this.player.currentFuel > 80){
+            this.fuelBar.play("playerFuelBar1", true)
+        }
+        else if(this.player.currentFuel > 70){
+            this.fuelBar.play("playerFuelBar2", true)
+        }
+        else if(this.player.currentFuel > 60){
+            this.fuelBar.play("playerFuelBar3", true)
+        }
+        else if(this.player.currentFuel > 50){
+            this.fuelBar.play("playerFuelBar4", true)
+        }
+        else if(this.player.currentFuel > 40){
+            this.fuelBar.play("playerFuelBar5", true)
+        }
+        else if(this.player.currentFuel > 30){
+            this.fuelBar.play("playerFuelBar6", true)
+        }
+        else if(this.player.currentFuel > 20){
+            this.fuelBar.play("playerFuelBar7", true)
+        }
+        else if(this.player.currentFuel > 10){
+            this.fuelBar.play("playerFuelBar8", true)
+        }
+        else if(this.player.currentFuel > 0){
+            this.fuelBar.play("playerFuelBar9", true)
+        }
+        else if(this.player.currentFuel = 0){
+            this.fuelBar.play("playerFuelBar10", true)
         }
     }
     createEnemy(dataObject) {
@@ -288,13 +477,13 @@ class TankScene extends Phaser.Scene {
     collectHealth(player, healthItem){
         if(this.player.damageCount > 0){
             healthItem.disableBody(true, true)
-            this.player.damageCount --
+            this.player.damageCount -= 2
         }
     }
     collectFuel(player, fuelItem){
-        if(this.player.currentFuel < 36){
+        if(this.player.currentFuel < 100){
             fuelItem.disableBody(true, true)
-            this.player.currentFuel += 9
+            this.player.currentFuel += 20
         }
     }
     disposeOfBullet(bullet) {
